@@ -3,6 +3,7 @@ import pygame
 
 from constants import GREEN
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -29,7 +30,10 @@ class Player(pygame.sprite.Sprite):
         self.invincible = False  # Make player invincible while dashing
         self.key_press = {}
 
-    def update(self, platforms, walls):
+        #SCORE
+        self.score = 0
+
+    def update(self, platforms, walls, orbs):
         # Get pressed keys
         keys = pygame.key.get_pressed()
 
@@ -96,6 +100,13 @@ class Player(pygame.sprite.Sprite):
                 self.rect.bottom = platform.rect.top
                 self.velocity_y = 0
                 self.on_ground = True
+
+        # Check for collision with orbs
+        for orb in orbs:
+            if self.rect.colliderect(orb.rect) and self.velocity_y > 0:
+                # remove orb
+                orb.kill()
+                self.score += 1
 
         # Jump if on ground
         if keys[pygame.K_SPACE] and self.on_ground:

@@ -51,7 +51,12 @@ walls = pygame.sprite.Group(
 )
 orbs = pygame.sprite.Group(
     # orb
-    Orbs(100,200,"green")
+    Orbs(100,200,"green"),
+    Orbs(400,480,"magenta"),
+    Orbs(700,200,"red"),
+    Orbs(800,500,"purple"),
+    Orbs(1500,500,"lightblue"),
+    Orbs(2300,450,"pink")
 )
 
 all_sprites = pygame.sprite.Group(*walls, *orbs, player, *platforms)
@@ -120,13 +125,9 @@ while running:
 
     # Render and display the story text
     y_offset = SCREEN_HEIGHT // 4  # Start drawing text from a quarter of the screen height
-    for line in story_text:
-        text = font.render(line, True, (0, 0, 0))  # Black text
-        screen.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, y_offset))
-        y_offset += 40  # Move the next line down
 
     # Update player and camera
-    player.update(platforms, walls)
+    player.update(platforms, walls, orbs)
     camera.update(player)
 
     # Draw everything
@@ -138,5 +139,46 @@ while running:
     for sprite in all_sprites:
         screen.blit(sprite.image, camera.apply(sprite))  # Draw with camera offset
 
+    text_surface = font.render("Score: "+str(player.score), False, (0, 0, 0))
+    screen.blit(text_surface, (0,0))
+
     pygame.display.flip()
     clock.tick(30)
+    # win event
+    if (player.score >= 6):
+        running = False
+        continue
+
+
+# Win screen
+win_text = [
+    "You have collected all of the light orbs.",
+    "You have saved the earth for future generations to come.",
+    "Congratulations!"
+]
+
+splash_duration = 3000  # 3 seconds
+start_ticks = pygame.time.get_ticks()  # Start time for splash screen
+
+running = True
+while running:
+
+    # Check if the splash screen duration has passed
+    if pygame.time.get_ticks() - start_ticks >= splash_duration:
+        # Proceed to the main game loop after the splash screen
+        running = False
+        continue
+
+    # Draw splash screen (story text)
+    screen.fill(WHITE)  # Clear the screen
+    screen.blit(bg, (0, 0))  # Background image
+
+    # Render and display the story text
+    y_offset = SCREEN_HEIGHT // 4  # Start drawing text from a quarter of the screen height
+    for line in win_text:
+        text = font.render(line, True, (0, 0, 0))  # Black text
+        screen.blit(text, (SCREEN_WIDTH // 2 - text.get_width() // 2, y_offset))
+        y_offset += 40  # Move the next line down
+
+    pygame.display.flip()
+    clock.tick(30)  # Limit the framerate to 30 FPS
