@@ -134,7 +134,7 @@ while running:
     y_offset = SCREEN_HEIGHT // 4  # Start drawing text from a quarter of the screen height
 
     # Update player and camera
-    player.update(platforms, walls, orbs)
+    player.update(platforms, walls, orbs, enemies)
     camera.update(player)
 
     # Draw everything

@@ -6,7 +6,8 @@ from constants import GREEN
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load(r'src/resources/char_idle.png').convert_alpha()
+        self.invincibility_timer = 0
+        self.image = pygame.image.load(r'../resources/char_idle.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=(x, y))
         self.velocity_y = 0
         self.velocity_x = 0
@@ -40,7 +41,9 @@ class Player(pygame.sprite.Sprite):
 
         self.score = 0
 
-    def update(self, platforms, walls, orbs):
+        self.health = 5
+
+    def update(self, platforms, walls, orbs, enemies):
         # Get pressed keys
         keys = pygame.key.get_pressed()
 
@@ -168,6 +171,27 @@ class Player(pygame.sprite.Sprite):
                 self.is_slashing = False
                 self.invincible = False
 
+        if self.is_slashing:
+            for enemy in enemies:
+                if self.rect.colliderect(enemy.rect):
+                    enemy.take_damage(1)  # Call the kill method of the enemy
+
+        # if not self.is_slashing and not self.dashing:
+        #     for enemy in enemies:
+        #         if self.rect.colliderect(enemy.rect):
+        #             # Handle player getting hurt by enemy when not slashing
+        #             self.take_damage(1)
+        #             self.invincible = True
+        #
+        # if self.invincible:
+        #     self.invincibility_timer += 1
+        #     if self.invincibility_timer >= 360:  # 180 frames = 3 seconds at 60 FPS
+        #         self.invincible = False
+        #         self.invincibility_timer = 0  # Reset the timer
+
+
+
+
 
 
     def start_dash(self, direction):
@@ -182,3 +206,9 @@ class Player(pygame.sprite.Sprite):
         self.is_slashing = True
         self.slash_timer = self.slash_duration  # Set the slash duration
         print("Slash")
+
+    def take_damage(self, amount):
+        self.health -= amount
+
+        if(self.health <= 0):
+            self.kill()
