@@ -6,7 +6,7 @@ from constants import GREEN
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load('src/resources/char_idle.png').convert_alpha()
+        self.image = pygame.image.load(r'C:\Users\chris\Documents\School\Junior Year\Hackathon\HackathonFall2024\src\resources\char_idle.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=(x, y))
         self.velocity_y = 0
         self.velocity_x = 0

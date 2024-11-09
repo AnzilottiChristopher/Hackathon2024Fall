@@ -43,7 +43,7 @@ all_sprites = pygame.sprite.Group(player, *platforms, *walls)
 running = True
 clock = pygame.time.Clock()
 
-bg = pygame.image.load('src/resources/background.jpg')
+bg = pygame.image.load(r'C:\Users\chris\Documents\School\Junior Year\Hackathon\HackathonFall2024\src\resources\background.jpg')
 
 while running:
     for event in pygame.event.get():
