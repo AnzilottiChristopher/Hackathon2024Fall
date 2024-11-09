@@ -72,7 +72,7 @@ all_sprites = pygame.sprite.Group(*walls, *orbs, player, *platforms, *enemies)
 running = True
 clock = pygame.time.Clock()
 
-bg = pygame.image.load(r'C:\Users\chris\Documents\School\Junior Year\Hackathon\HackathonFall2024\src\resources\background.jpg')
+bg = pygame.image.load('src/resources/background.jpg')
 
 # Font for story text
 font = pygame.font.Font(None, 36)
@@ -163,7 +163,11 @@ while running:
 win_text = [
     "You have collected all of the light orbs.",
     "You have saved the earth for future generations to come.",
-    "Congratulations!"
+    "With the power of these light orbs,",
+    "people will stop becoming so reliant on pollution.",
+    "You may not have changed their minds..",
+    "but you have repaired the damage from their actions.",
+    "Congratulations, and thank you!"
 ]
 
 splash_duration = 3000  # 3 seconds

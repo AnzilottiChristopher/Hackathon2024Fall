@@ -111,7 +111,7 @@ class Player(pygame.sprite.Sprite):
 
         # Check for collision with orbs
         for orb in orbs:
-            if self.rect.colliderect(orb.rect) and self.velocity_y > 0:
+            if self.rect.colliderect(orb.rect):
                 # remove orb
                 orb.kill()
                 self.score += 1
