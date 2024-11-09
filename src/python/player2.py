@@ -2,7 +2,7 @@
 import pygame
 from constants import GREEN
 
-class Player(pygame.sprite.Sprite):
+class Player2(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
         self.image = pygame.Surface((50, 50))

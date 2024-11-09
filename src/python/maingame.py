@@ -3,7 +3,7 @@ import sys
 from camera import Camera
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH, WHITE
 from platforms import Platforms
-from player import Player
+from player2 import Player
 
 # Initialize Pygame
 pygame.init()
