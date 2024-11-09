@@ -67,7 +67,7 @@ all_sprites = pygame.sprite.Group(*walls, *orbs, player, *platforms, *enemies)
 running = True
 clock = pygame.time.Clock()
 
-bg = pygame.image.load('src/resources/background.jpg')
+bg = pygame.image.load(r'C:\Users\chris\Documents\School\Junior Year\Hackathon\HackathonFall2024\src\resources\background.jpg')
 
 # Font for story text
 font = pygame.font.Font(None, 36)
