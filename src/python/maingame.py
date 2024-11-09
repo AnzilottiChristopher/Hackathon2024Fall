@@ -4,6 +4,7 @@ from camera import Camera
 from constants import SCREEN_HEIGHT, SCREEN_WIDTH, WHITE
 from platforms import Platforms
 from player import Player
+from orbs import Orbs
 
 # Initialize Pygame
 pygame.init()
@@ -39,7 +40,7 @@ walls = pygame.sprite.Group(
     Platforms(3500, 100, 20, 520), 
     # Air platforms
     Platforms(600, 280, 20, 240),
-    # Blocking wall
+     # Blocking wall
     Platforms(900, 400, 20, 200),
     # Blocking wall in middle that needs to be jumped over
     Platforms(1400, 100, 20, 500),
@@ -47,10 +48,13 @@ walls = pygame.sprite.Group(
     # Room with enemy
     Platforms(2000, 250, 20, 240),
     Platforms(2500, 250, 20, 360)
-    
+)
+orbs = pygame.sprite.Group(
+    # orb
+    Orbs(100,200,"green")
 )
 
-all_sprites = pygame.sprite.Group(player, *platforms, *walls)
+all_sprites = pygame.sprite.Group(*walls, *orbs, player, *platforms)
 
 # Game loop
 running = True
