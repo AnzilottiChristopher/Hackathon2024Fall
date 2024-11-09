@@ -17,7 +17,7 @@ function App() {
       </header>
       <div class="main">
         <h2>Theme: Sustainability</h2>
-        <p>This game is a side-scrolling platformer where you play as a hero and </p>
+        <p>This game is a side-scrolling platformer where you play as a hero and act to save the world. You will talk to animals and fight enemies, using abilities inspired by our planet Earth!</p>
       </div>
     </div>
     /*
