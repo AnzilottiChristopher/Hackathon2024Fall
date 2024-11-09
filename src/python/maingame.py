@@ -43,6 +43,8 @@ all_sprites = pygame.sprite.Group(player, *platforms, *walls)
 running = True
 clock = pygame.time.Clock()
 
+bg = pygame.image.load('src/resources/background.jpg')
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -55,6 +57,10 @@ while running:
 
     # Draw everything
     screen.fill(WHITE)
+    #background
+    screen.blit(bg,(0,0))
+
+    #sprites
     for sprite in all_sprites:
         screen.blit(sprite.image, camera.apply(sprite))  # Draw with camera offset
 
