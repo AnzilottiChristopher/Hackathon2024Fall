@@ -14,9 +14,9 @@ class Camera:
         return entity.rect.move(self.camera_rect.topleft)
 
     def update(self, target):
-        # Center the camera on the player
+        # Center the camera on the player but a little higher
         x = -target.rect.centerx + SCREEN_WIDTH // 2
-        y = -target.rect.centery + SCREEN_HEIGHT // 2
+        y = -target.rect.centery + SCREEN_HEIGHT // 2 + 50
 
         # Limit scrolling to the edges of the world (e.g., right and bottom bounds)
         x = min(0, x)  # Don't scroll past the left edge
