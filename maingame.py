@@ -10,8 +10,7 @@ pygame.init()
 
 # Screen settings
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Endangered Animal Adventure - Side Scroller")
-
+pygame.display.set_caption("Sustainable Hero Sidescroller")
 
 # Setup
 player = Player(100, SCREEN_HEIGHT - 150)
@@ -27,6 +26,7 @@ walls = pygame.sprite.Group(
     Platforms(50, 100, 20, 500),
     # right wall
     Platforms(4050, 100, 20, 520), 
+    # Air platforms
 )
 
 all_sprites = pygame.sprite.Group(player, *platforms, *walls)
