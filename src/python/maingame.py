@@ -5,6 +5,7 @@ from constants import SCREEN_HEIGHT, SCREEN_WIDTH, WHITE
 from platforms import Platforms
 from player import Player
 from orbs import Orbs
+from enemy import Enemy
 
 # Initialize Pygame
 pygame.init()
@@ -15,7 +16,13 @@ pygame.display.set_caption("Sustainable Hero Sidescroller")
 
 # Setup
 player = Player(100, SCREEN_HEIGHT - 150)
-camera = Camera(3520, 1200)  # World size
+camera = Camera(2650, 1200)  # World size
+enemies = pygame.sprite.Group(
+    Enemy(700, 230, 50, 50, 1),  # x, y, width, height, speed
+    Enemy(900, 230, 50, 50, 1),
+    Enemy(1330, 550, 50, 50, 3),
+    Enemy(2100, 550, 50, 50, 1)
+)
 platforms = pygame.sprite.Group(
     # main floor
     Platforms(50, 600, 3470, 20),
@@ -59,7 +66,7 @@ orbs = pygame.sprite.Group(
     Orbs(2300,450,"pink")
 )
 
-all_sprites = pygame.sprite.Group(*walls, *orbs, player, *platforms)
+all_sprites = pygame.sprite.Group(*walls, *orbs, player, *platforms, *enemies)
 
 # Game loop
 running = True
@@ -138,6 +145,8 @@ while running:
     #sprites
     for sprite in all_sprites:
         screen.blit(sprite.image, camera.apply(sprite))  # Draw with camera offset
+    for enemy in enemies:
+        enemy.update(platforms)
 
     text_surface = font.render("Score: "+str(player.score), False, (0, 0, 0))
     screen.blit(text_surface, (0,0))
