@@ -127,11 +127,12 @@ class Player(pygame.sprite.Sprite):
                     if keys[pygame.K_RIGHT]:
                         self.rect.x += self.speed
 
-                # Prevent the player from going through the wall
-                if self.rect.left < wall.rect.right:
-                    self.rect.left = wall.rect.right
-                elif self.rect.right > wall.rect.left:
+               # Prevent the player from going through the wall
+                if self.rect.right > wall.rect.left and self.rect.left < wall.rect.left:  # Moving right
                     self.rect.right = wall.rect.left
+                elif self.rect.left < wall.rect.right and self.rect.right > wall.rect.right:  # Moving left
+                    self.rect.left = wall.rect.right
+                
 
         # Prevent jumping off the wall if on the ground
         self.ability(keys)
