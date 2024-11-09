@@ -1,7 +1,5 @@
-# Player class
 import pygame
-
-from constants import GREEN
+from python.platforms import Platforms
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -17,6 +15,12 @@ class Player(pygame.sprite.Sprite):
         self.jump_direction_strength = 8  # How strong the jump is when moving diagonally
         self.gravity = 1
         self.slide_speed = 2  # Speed at which the player slides down the wall
+        # Inside your Player class
+        self.slash_hitbox = pygame.Rect(self.rect.x - 50, self.rect.centery - 10, 100,
+                                        20)  # Example size and position
+        self.initial_y = y
+        self.direction = "right"
+        self.initial_x = x
 
         # Dash attributes
         self.dash_speed = 20  # Speed of the dash
@@ -29,6 +33,14 @@ class Player(pygame.sprite.Sprite):
         self.invincible = False  # Make player invincible while dashing
         self.key_press = {}
 
+        # Slash attributes
+        self.is_slashing = False  # Track if player is slashing
+        self.slash_duration = 10  # How long the slash lasts
+        self.slash_timer = 0  # Timer to track slash duration
+
+        # Platform group to hold all active platforms
+        self.platforms = pygame.sprite.Group()
+
     def update(self, platforms, walls):
         # Get pressed keys
         keys = pygame.key.get_pressed()
@@ -39,12 +51,13 @@ class Player(pygame.sprite.Sprite):
             elif event.type == pygame.KEYUP:
                 self.key_press[event.key] = False
 
-        # Normal movement (not dashing)
-        if not self.dashing:
-            if keys[pygame.K_a]:
-                self.rect.x -= self.speed
-            if keys[pygame.K_d]:
-                self.rect.x += self.speed
+        # Handle horizontal movement: left/right
+        if keys[pygame.K_a]:
+            self.rect.x -= self.speed
+            self.direction = "left"
+        if keys[pygame.K_d]:
+            self.rect.x += self.speed
+            self.direction = "right"
 
         # Initiate dash if the shift key is pressed and cooldown allows
         if (keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]) and self.cooldown_timer <= 0:
@@ -53,7 +66,8 @@ class Player(pygame.sprite.Sprite):
             elif keys[pygame.K_d]:
                 self.start_dash("right")
 
-        # Cooldown management
+
+        # Cooldown management for dash
         if self.cooldown_timer > 0:
             self.cooldown_timer -= 1
 
@@ -121,12 +135,6 @@ class Player(pygame.sprite.Sprite):
                     self.on_wall = True
                     self.velocity_y = self.slide_speed  # Begin sliding down
 
-                    # Optional: allow horizontal movement while sliding
-                    if keys[pygame.K_LEFT]:
-                        self.rect.x -= self.speed
-                    if keys[pygame.K_RIGHT]:
-                        self.rect.x += self.speed
-
                 # Prevent the player from going through the wall
                 if self.rect.left < wall.rect.right:
                     self.rect.left = wall.rect.right
@@ -134,10 +142,21 @@ class Player(pygame.sprite.Sprite):
                     self.rect.right = wall.rect.left
 
         # Prevent jumping off the wall if on the ground
-        self.ability(keys)
+        # self.ability(keys)
 
         if self.on_ground:
             self.on_wall = False
+
+        if keys[pygame.K_i] and not self.is_slashing:
+            self.start_slash()
+
+        if self.is_slashing:
+            self.slash_timer -= 1
+            if self.slash_timer <= 0:
+                self.is_slashing = False
+                self.invincible = False
+
+
 
     def start_dash(self, direction):
         """Initiate a dash in the specified direction."""
@@ -146,11 +165,7 @@ class Player(pygame.sprite.Sprite):
         self.dash_direction = direction
         self.invincible = True  # Become invincible during dash
 
-    def ability(self, keys):
-        if keys[pygame.K_i]:
-            print("hi")
-        elif keys[pygame.K_o]:
-            print("hi")
-
-
-
+    def start_slash(self):
+        """Start the slash action."""
+        self.is_slashing = True
+        self.slash_timer = self.slash_duration  # Set the slash duration

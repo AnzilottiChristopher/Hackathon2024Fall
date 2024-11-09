@@ -60,6 +60,8 @@ while running:
     #background
     screen.blit(bg,(0,0))
 
+    if player.is_slashing:
+        pygame.draw.rect(screen, (0, 0, 255), player.slash_hitbox)  # Draw slash hitbox directly (no camera offset)
     #sprites
     for sprite in all_sprites:
         screen.blit(sprite.image, camera.apply(sprite))  # Draw with camera offset
