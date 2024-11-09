@@ -3,6 +3,7 @@ import './web_resources/App.css';
 import logo from './web_resources/img_small.png'; // Tell webpack this JS file uses this image
 
 import img1 from './web_resources/message.png'; // Story
+import scr0 from './web_resources/firstScreen.png';
 import scr1 from './web_resources/screen1.png';
 import scr2 from './web_resources/screen2.png';
 import winScreen from './web_resources/winScreen.png';
@@ -18,9 +19,9 @@ function App() {
           <b>Team Name</b>: Let's make a game!<br/>
           <b>Team Members</b>: Christopher Anzilotti, Paul Zegarek, Peter Zegarek
         </p>
-        <button id="gameButton" type="button" class="btn btn-info">Let's see our game!</button>
+        <button id="gameButton" type="button" class="btn btn-info" onClick={() => window.location.href = '#maindiv'}>Let's see our game!</button>
       </header>
-      <div class="main">
+      <div id="maindiv" class="main">
         <h2><b>Our Theme: </b>Sustainability</h2>
         <p>We had to come up with a solution that will help people conserve natural resources and protect global ecosystems to support health and wellbeing, now and in the future</p>
         <h3>Game Summary</h3>
@@ -37,7 +38,9 @@ function App() {
         <ul>
         <li><b>A: </b>Move Left</li>
         <li><b>D: </b>Move Right</li>
+        <li><b>I: </b>Attack</li>
         <li><b>Space: </b>Jump</li>
+        <li><b>Shift: </b>Dash</li>
         </ul>
         <h3>Inspiration</h3>
         <p>The game was inspired by events that we know contribute to the global climate crisis many of us are facing in different places of the world.
@@ -45,7 +48,11 @@ function App() {
           It is meant to be a fun experience, that shows the player the damage that pollution can cause.
         </p>
         <h3>Screenshots</h3>
-        <img class="responsive" src={img1} alt=""/><img class="responsive" src={scr1} alt=""/><img class="responsive" src={scr2} alt=""/><img class="responsive" src={winScreen} alt=""/>
+        <img class="responsive" src={img1} alt=""/>
+        <img class="responsive" src={scr0} alt=""/>
+        <img class="responsive" src={scr1} alt=""/>
+        <img class="responsive" src={scr2} alt=""/>
+        <img class="responsive" src={winScreen} alt=""/>
         <h3>Future Plans</h3>
         <p>If we had some more time to work on this game, we would have added better animations. We also would have made the story more fleshed out and meaningful.
         </p>
