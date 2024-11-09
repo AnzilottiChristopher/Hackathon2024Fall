@@ -42,16 +42,16 @@ class Player(pygame.sprite.Sprite):
 
         # Normal movement (not dashing)
         if not self.dashing:
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_a]:
                 self.rect.x -= self.speed
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_d]:
                 self.rect.x += self.speed
 
         # Initiate dash if the shift key is pressed and cooldown allows
         if (keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]) and self.cooldown_timer <= 0:
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_a]:
                 self.start_dash("left")
-            elif keys[pygame.K_RIGHT]:
+            elif keys[pygame.K_d]:
                 self.start_dash("right")
 
         # Cooldown management
@@ -105,10 +105,10 @@ class Player(pygame.sprite.Sprite):
         # Wall jump handling
         if self.on_wall and keys[pygame.K_SPACE]:
             # Apply jump velocity upwards and to the right or left, depending on wall side
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_a]:
                 self.velocity_y = self.jump_height
                 self.velocity_x = self.jump_direction_strength  # Move to the left
-            elif keys[pygame.K_RIGHT]:
+            elif keys[pygame.K_d]:
                 self.velocity_y = self.jump_height
                 self.velocity_x = -self.jump_direction_strength  # Move to the right
             self.on_wall = False  # Stop wall sliding once you jump
@@ -135,6 +135,8 @@ class Player(pygame.sprite.Sprite):
                     self.rect.right = wall.rect.left
 
         # Prevent jumping off the wall if on the ground
+        self.ability(keys)
+
         if self.on_ground:
             self.on_wall = False
 
@@ -144,3 +146,12 @@ class Player(pygame.sprite.Sprite):
         self.dash_timer = self.dash_duration
         self.dash_direction = direction
         self.invincible = True  # Become invincible during dash
+
+    def ability(self, keys):
+        if keys[pygame.K_i]:
+            print("hi")
+        elif keys[pygame.K_o]:
+            print("hi")
+
+
+
