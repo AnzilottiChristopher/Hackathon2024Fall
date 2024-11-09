@@ -16,7 +16,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_height = -15
         self.gravity = 1
 
-    def update(self, platforms):
+    def update(self, platforms, walls):
         # Horizontal movement
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
@@ -35,6 +35,11 @@ class Player(pygame.sprite.Sprite):
                 self.rect.bottom = platform.rect.top
                 self.velocity_y = 0
                 self.on_ground = True
+        # check for collision with walls and disallow it
+        for wall in walls:
+            if self.rect.colliderect(wall.rect):
+                self.rect.left = wall.rect.right
+                self.velocity_x = 0
 
         # Jump if on ground
         if keys[pygame.K_SPACE] and self.on_ground:
