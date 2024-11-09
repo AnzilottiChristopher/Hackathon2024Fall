@@ -90,7 +90,7 @@ story_text = [
 ]
 
 # Timer for the splash screen (in milliseconds)
-splash_duration = 3000  # 3 seconds
+splash_duration = 12000  # 12 seconds
 start_ticks = pygame.time.get_ticks()  # Start time for splash screen
 
 # Splash screen loop
@@ -170,7 +170,7 @@ win_text = [
     "Congratulations, and thank you!"
 ]
 
-splash_duration = 3000  # 3 seconds
+splash_duration = 12000  # 12 seconds
 start_ticks = pygame.time.get_ticks()  # Start time for splash screen
 
 running = True
