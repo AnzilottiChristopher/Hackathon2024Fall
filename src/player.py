@@ -16,12 +16,14 @@ class Player(pygame.sprite.Sprite):
 
         # Dash attributes
         self.dash_speed = 20  # Speed of the dash
-        self.dash_duration = 10  # Frames the dash lasts
-        self.dash_cooldown = 30  # Frames before dash can be used again
+        self.dash_duration = 7  # Frames the dash lasts
+        self.dash_cooldown = 15  # Frames before dash can be used again
         self.dash_timer = 0
         self.cooldown_timer = 0
+        self.dash_direction = None
         self.dashing = False
         self.invincible = False  # Make player invincible while dashing
+        self.key_press = {}
 
         # Wall jump attributes
         self.wall_jump_height = -12  # Height for wall jump
@@ -29,38 +31,29 @@ class Player(pygame.sprite.Sprite):
         self.wall_jump_timer = 0
         self.on_wall = False  # Check if the player is touching a wall
         self.wall_side = None  # Which side of the wall (left or right)
+        self.slide_speed = 2  # Speed at which the player slides down
 
     def update(self, platforms):
         # Get pressed keys
         keys = pygame.key.get_pressed()
 
-        # Wall jump logic
-        if self.wall_jump_timer > 0:
-            self.wall_jump_timer -= 1
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                self.key_press[event.key] = True
+            elif event.type == pygame.KEYUP:
+                self.key_press[event.key] = False
 
-        if self.on_wall and keys[pygame.K_SPACE] and self.wall_jump_timer <= 0:
-            # Perform the wall jump
-            if self.wall_side == "left":
-                self.velocity_y = self.wall_jump_height
-                self.rect.x += 10  # Move slightly away from the wall (right)
-            elif self.wall_side == "right":
-                self.velocity_y = self.wall_jump_height
-                self.rect.x -= 10  # Move slightly away from the wall (left)
-            self.wall_jump_timer = self.wall_jump_cooldown  # Start cooldown
+        # Wall jump and sliding logic
+        if self.on_wall:
+            # Slide down the wall if the player is near the wall and not on the ground
+            if not self.on_ground:
+                self.velocity_y += self.slide_speed
+                self.rect.y += self.velocity_y
 
-        # Horizontal movement and dash logic
-        if self.dashing:
-            if self.dash_direction == "left":
-                self.rect.x -= self.dash_speed
-            elif self.dash_direction == "right":
-                self.rect.x += self.dash_speed
+            # Perform wall jump if Space is pressed
+            if keys[pygame.K_SPACE] and self.wall_jump_timer <= 0:
+                self.wall_jump()
 
-            # Decrease the dash timer and end dash if timer runs out
-            self.dash_timer -= 1
-            if self.dash_timer <= 0:
-                self.dashing = False
-                self.invincible = False
-                self.cooldown_timer = self.dash_cooldown
         else:
             # Normal movement
             if keys[pygame.K_LEFT]:
@@ -79,9 +72,22 @@ class Player(pygame.sprite.Sprite):
         if self.cooldown_timer > 0:
             self.cooldown_timer -= 1
 
-        # Apply gravity
-        self.velocity_y += self.gravity
-        self.rect.y += self.velocity_y
+        # Apply gravity for normal jumping
+        if not self.on_wall:
+            self.velocity_y += self.gravity
+            self.rect.y += self.velocity_y
+
+        # Dash movement
+        if self.dashing:
+            if self.dash_timer > 0:
+                if self.dash_direction == "left":
+                    self.rect.x -= self.dash_speed
+                elif self.dash_direction == "right":
+                    self.rect.x += self.dash_speed
+                self.dash_timer -= 1
+            else:
+                self.dashing = False
+                self.invincible = False  # Stop being invincible after the dash
 
         # Check for collision with platforms and walls
         self.on_ground = False
@@ -119,3 +125,16 @@ class Player(pygame.sprite.Sprite):
         self.dash_timer = self.dash_duration
         self.dash_direction = direction
         self.invincible = True  # Become invincible during dash
+
+    def wall_jump(self):
+        """Perform the wall jump (push off the wall)."""
+        if self.wall_side == "left":
+            self.velocity_y = self.wall_jump_height
+            self.rect.x += 10  # Move slightly away from the wall (right)
+        elif self.wall_side == "right":
+            self.velocity_y = self.wall_jump_height
+            self.rect.x -= 10  # Move slightly away from the wall (left)
+
+        # After wall jump, reset timers and flags
+        self.wall_jump_timer = self.wall_jump_cooldown
+        self.on_wall = False  # No longer on the wall after jumping
