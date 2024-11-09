@@ -10,21 +10,34 @@ pygame.init()
 
 # Screen settings
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Endangered Animal Adventure - Side Scroller")
-
+pygame.display.set_caption("Sustainable Hero Sidescroller")
 
 # Setup
 player = Player(100, SCREEN_HEIGHT - 150)
-camera = Camera(1600, 1200)  # World size (for example, 1600x1200)
+camera = Camera(3000, 1200)  # World size
 platforms = pygame.sprite.Group(
-    Platforms(200, 500, 200, 20),
-    Platforms(500, 400, 200, 20),
-    Platforms(800, 300, 200, 20),
-    Platforms(1200, 200, 200, 20),
-    Platforms(50, 1000, 1000, 20),
+    # main floor
+    Platforms(50, 600, 4000, 20),
+    # platforms in air
+    Platforms(300, 500, 300, 20),
+    # platforms on left wall at start
+    Platforms(70, 400, 150, 20),
+    Platforms(70, 300, 150, 20),
+    Platforms(300, 250, 100, 20),
+    Platforms(450, 150, 100, 20)
+)
+walls = pygame.sprite.Group(
+    # left wall
+    Platforms(50, 100, 20, 500),
+    # right wall
+    Platforms(4050, 100, 20, 520), 
+    # Air platforms
+    Platforms(600, 280, 20, 240),
+    
+    
 )
 
-all_sprites = pygame.sprite.Group(player, *platforms)
+all_sprites = pygame.sprite.Group(player, *platforms, *walls)
 
 # Game loop
 running = True
@@ -37,7 +50,7 @@ while running:
             sys.exit()
 
     # Update player and camera
-    player.update(platforms)
+    player.update(platforms, walls)
     camera.update(player)
 
     # Draw everything

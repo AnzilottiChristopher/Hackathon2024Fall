@@ -9,3 +9,9 @@ class Platforms(pygame.sprite.Sprite):
         self.image = pygame.Surface((width, height))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect(topleft=(x, y))
+
+    def create_with_argument(self, x, y, param):
+        super().__init__()
+        self.image = pygame.Surface((param[0], param[1]))
+        self.image.fill(BLUE)
+        self.rect = self.image.get_rect(topleft=(x, y))
