@@ -1,10 +1,12 @@
+# Player class
 import pygame
-from python.platforms import Platforms
+
+from constants import GREEN
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load(r'C:\Users\chris\Documents\School\Junior Year\Hackathon\HackathonFall2024\src\resources\char_idle.png').convert_alpha()
+        self.image = pygame.image.load(r'src/resources/char_idle.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=(x, y))
         self.velocity_y = 0
         self.velocity_x = 0
@@ -16,8 +18,6 @@ class Player(pygame.sprite.Sprite):
         self.gravity = 1
         self.slide_speed = 2  # Speed at which the player slides down the wall
         # Inside your Player class
-        self.slash_hitbox = pygame.Rect(self.rect.x - 50, self.rect.centery - 10, 100,
-                                        20)  # Example size and position
         self.initial_y = y
         self.direction = "right"
         self.initial_x = x
@@ -39,7 +39,6 @@ class Player(pygame.sprite.Sprite):
         self.slash_timer = 0  # Timer to track slash duration
 
         # Platform group to hold all active platforms
-        self.platforms = pygame.sprite.Group()
 
     def update(self, platforms, walls):
         # Get pressed keys
@@ -135,11 +134,18 @@ class Player(pygame.sprite.Sprite):
                     self.on_wall = True
                     self.velocity_y = self.slide_speed  # Begin sliding down
 
-                # Prevent the player from going through the wall
-                if self.rect.left < wall.rect.right:
-                    self.rect.left = wall.rect.right
-                elif self.rect.right > wall.rect.left:
+                    # Optional: allow horizontal movement while sliding
+                    if keys[pygame.K_a]:
+                        self.rect.x -= self.speed
+                    if keys[pygame.K_d]:
+                        self.rect.x += self.speed
+
+               # Prevent the player from going through the wall
+                if self.rect.right > wall.rect.left and self.rect.left < wall.rect.left:  # Moving right
                     self.rect.right = wall.rect.left
+                elif self.rect.left < wall.rect.right and self.rect.right > wall.rect.right:  # Moving left
+                    self.rect.left = wall.rect.right
+
 
         # Prevent jumping off the wall if on the ground
         # self.ability(keys)
