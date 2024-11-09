@@ -1,11 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+//import logo from './logo.svg';
+import './web_resources/App.css';
+import logo from './web_resources/img_small.png'; // Tell webpack this JS file uses this image
 
 function App() {
   return (
+    // this is our A P P!
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={logo} alt="HACKQU"/>
+        <h1>Fall 2024 Hackathon</h1>
+        <p>
+          <b>Team Name</b>: Let's make a game!<br/>
+          <b>Team Members</b>: Christopher Anzilotti, Paul Zegarek, Peter Zegarek
+        </p>
+        <button id="gameButton" type="button" class="btn btn-info">Let's see our game!</button>
+      </header>
+      <div class="main">
+        <h2>Theme: Sustainability</h2>
+        <p>This game is a side-scrolling platformer where you play as a hero and </p>
+      </div>
+    </div>
+    /*
+    OLD HEADER
+
+    <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
@@ -17,8 +35,7 @@ function App() {
         >
           Learn React
         </a>
-      </header>
-    </div>
+    */
   );
 }
 
