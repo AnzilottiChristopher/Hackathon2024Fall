@@ -15,7 +15,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.speed = speed
         self.direction = 1  # 1 for moving right, -1 for moving left
-        self.health = 100  # Example health value
+        self.health = 10  # Example health value
         self.last_update_time = time.time()  # Record the initial time
         
     def update(self, platforms):
