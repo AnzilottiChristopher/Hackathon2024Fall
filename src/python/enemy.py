@@ -5,12 +5,17 @@ import time
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height, speed):
         super().__init__()
-        self.image = pygame.Surface((width, height))
-        self.image.fill(RED)  # Set enemy color (or load an image)
-        self.rect = self.image.get_rect(topleft=(x, y))
+        self.image = pygame.image.load(r'src/resources/blob.png').convert_alpha()
+        scaled_image = pygame.transform.scale(self.image, (50, 50))
+        # Set the rect for positioning
+        self.rect = scaled_image.get_rect(topleft=(x, y))
+
+        # Assign the scaled image to self.image
+        self.image = scaled_image
+
         self.speed = speed
         self.direction = 1  # 1 for moving right, -1 for moving left
-        self.health = 100  # Example health value
+        self.health = 10  # Example health value
         self.last_update_time = time.time()  # Record the initial time
         
     def update(self, platforms):

@@ -3,10 +3,10 @@ import pygame
 
 from constants import GREEN
 
-
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
+        self.invincibility_timer = 0
         self.image = pygame.image.load(r'src/resources/char_idle.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=(x, y))
         self.velocity_y = 0
@@ -18,6 +18,10 @@ class Player(pygame.sprite.Sprite):
         self.jump_direction_strength = 8  # How strong the jump is when moving diagonally
         self.gravity = 1
         self.slide_speed = 2  # Speed at which the player slides down the wall
+        # Inside your Player class
+        self.initial_y = y
+        self.direction = "right"
+        self.initial_x = x
 
         # Dash attributes
         self.dash_speed = 20  # Speed of the dash
@@ -30,10 +34,16 @@ class Player(pygame.sprite.Sprite):
         self.invincible = False  # Make player invincible while dashing
         self.key_press = {}
 
-        #SCORE
+        # Slash attributes
+        self.is_slashing = False  # Track if player is slashing
+        self.slash_duration = 10  # How long the slash lasts
+        self.slash_timer = 0  # Timer to track slash duration
+
         self.score = 0
 
-    def update(self, platforms, walls, orbs):
+        self.health = 5
+
+    def update(self, platforms, walls, orbs, enemies):
         # Get pressed keys
         keys = pygame.key.get_pressed()
 
@@ -43,12 +53,13 @@ class Player(pygame.sprite.Sprite):
             elif event.type == pygame.KEYUP:
                 self.key_press[event.key] = False
 
-        # Normal movement (not dashing)
-        if not self.dashing:
-            if keys[pygame.K_a]:
-                self.rect.x -= self.speed
-            if keys[pygame.K_d]:
-                self.rect.x += self.speed
+        # Handle horizontal movement: left/right
+        if keys[pygame.K_a]:
+            self.rect.x -= self.speed
+            self.direction = "left"
+        if keys[pygame.K_d]:
+            self.rect.x += self.speed
+            self.direction = "right"
 
         # Initiate dash if the shift key is pressed and cooldown allows
         if (keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]) and self.cooldown_timer <= 0:
@@ -103,7 +114,7 @@ class Player(pygame.sprite.Sprite):
 
         # Check for collision with orbs
         for orb in orbs:
-            if self.rect.colliderect(orb.rect) and self.velocity_y > 0:
+            if self.rect.colliderect(orb.rect):
                 # remove orb
                 orb.kill()
                 self.score += 1
@@ -133,9 +144,9 @@ class Player(pygame.sprite.Sprite):
                     self.velocity_y = self.slide_speed  # Begin sliding down
 
                     # Optional: allow horizontal movement while sliding
-                    if keys[pygame.K_LEFT]:
+                    if keys[pygame.K_a]:
                         self.rect.x -= self.speed
-                    if keys[pygame.K_RIGHT]:
+                    if keys[pygame.K_d]:
                         self.rect.x += self.speed
 
                # Prevent the player from going through the wall
@@ -146,10 +157,42 @@ class Player(pygame.sprite.Sprite):
                 
 
         # Prevent jumping off the wall if on the ground
-        self.ability(keys)
+        # self.ability(keys)
 
         if self.on_ground:
             self.on_wall = False
+
+        if keys[pygame.K_i] and not self.is_slashing:
+            self.start_slash()
+
+        if self.is_slashing:
+            self.slash_timer -= 1
+            if self.slash_timer <= 0:
+                self.is_slashing = False
+                self.invincible = False
+
+        if self.is_slashing:
+            for enemy in enemies:
+                if self.rect.colliderect(enemy.rect):
+                    enemy.take_damage(1)  # Call the kill method of the enemy
+
+        # if not self.is_slashing and not self.dashing:
+        #     for enemy in enemies:
+        #         if self.rect.colliderect(enemy.rect):
+        #             # Handle player getting hurt by enemy when not slashing
+        #             self.take_damage(1)
+        #             self.invincible = True
+        #
+        # if self.invincible:
+        #     self.invincibility_timer += 1
+        #     if self.invincibility_timer >= 360:  # 180 frames = 3 seconds at 60 FPS
+        #         self.invincible = False
+        #         self.invincibility_timer = 0  # Reset the timer
+
+
+
+
+
 
     def start_dash(self, direction):
         """Initiate a dash in the specified direction."""
@@ -158,11 +201,14 @@ class Player(pygame.sprite.Sprite):
         self.dash_direction = direction
         self.invincible = True  # Become invincible during dash
 
-    def ability(self, keys):
-        if keys[pygame.K_i]:
-            print("hi")
-        elif keys[pygame.K_o]:
-            print("hi")
+    def start_slash(self):
+        """Start the slash action."""
+        self.is_slashing = True
+        self.slash_timer = self.slash_duration  # Set the slash duration
+        print("Slash")
 
+    def take_damage(self, amount):
+        self.health -= amount
 
-
+        if(self.health <= 0):
+            self.kill()

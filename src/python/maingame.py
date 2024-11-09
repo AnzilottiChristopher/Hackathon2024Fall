@@ -90,7 +90,7 @@ story_text = [
 ]
 
 # Timer for the splash screen (in milliseconds)
-splash_duration = 3000  # 3 seconds
+splash_duration = 12000  # 12 seconds
 start_ticks = pygame.time.get_ticks()  # Start time for splash screen
 
 # Splash screen loop
@@ -134,7 +134,7 @@ while running:
     y_offset = SCREEN_HEIGHT // 4  # Start drawing text from a quarter of the screen height
 
     # Update player and camera
-    player.update(platforms, walls, orbs)
+    player.update(platforms, walls, orbs, enemies)
     camera.update(player)
 
     # Draw everything
@@ -163,10 +163,14 @@ while running:
 win_text = [
     "You have collected all of the light orbs.",
     "You have saved the earth for future generations to come.",
-    "Congratulations!"
+    "With the power of these light orbs,",
+    "people will stop becoming so reliant on pollution.",
+    "You may not have changed their minds..",
+    "but you have repaired the damage from their actions.",
+    "Congratulations, and thank you!"
 ]
 
-splash_duration = 3000  # 3 seconds
+splash_duration = 12000  # 12 seconds
 start_ticks = pygame.time.get_ticks()  # Start time for splash screen
 
 running = True
