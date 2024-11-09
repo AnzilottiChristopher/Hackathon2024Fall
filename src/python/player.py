@@ -6,7 +6,7 @@ from constants import GREEN
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.image.load(r'C:\Users\chris\Documents\School\Junior Year\Hackathon\HackathonFall2024\src\resources\char_idle.png').convert_alpha()
+        self.image = pygame.image.load(r'src/resources/char_idle.png').convert_alpha()
         self.rect = self.image.get_rect(topleft=(x, y))
         self.velocity_y = 0
         self.velocity_x = 0
@@ -38,9 +38,9 @@ class Player(pygame.sprite.Sprite):
         self.slash_duration = 10  # How long the slash lasts
         self.slash_timer = 0  # Timer to track slash duration
 
-        # Platform group to hold all active platforms
+        self.score = 0
 
-    def update(self, platforms, walls):
+    def update(self, platforms, walls, orbs):
         # Get pressed keys
         keys = pygame.key.get_pressed()
 
@@ -65,8 +65,7 @@ class Player(pygame.sprite.Sprite):
             elif keys[pygame.K_d]:
                 self.start_dash("right")
 
-
-        # Cooldown management for dash
+        # Cooldown management
         if self.cooldown_timer > 0:
             self.cooldown_timer -= 1
 
@@ -110,6 +109,13 @@ class Player(pygame.sprite.Sprite):
                 self.velocity_y = 0
                 self.on_ground = True
 
+        # Check for collision with orbs
+        for orb in orbs:
+            if self.rect.colliderect(orb.rect) and self.velocity_y > 0:
+                # remove orb
+                orb.kill()
+                self.score += 1
+
         # Jump if on ground
         if keys[pygame.K_SPACE] and self.on_ground:
             self.velocity_y = self.jump_height
@@ -145,7 +151,7 @@ class Player(pygame.sprite.Sprite):
                     self.rect.right = wall.rect.left
                 elif self.rect.left < wall.rect.right and self.rect.right > wall.rect.right:  # Moving left
                     self.rect.left = wall.rect.right
-
+                
 
         # Prevent jumping off the wall if on the ground
         # self.ability(keys)
